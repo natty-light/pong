@@ -8,8 +8,8 @@
 #include <gl\gl.h>
 #include <gl\glu.h>
 #include "GL\freeglut.h"
-#include "racket.h"
-#include "ball.h"
+#include "racket.hh"
+#include "ball.hh"
 #pragma comment(lib, "OpenGL32.lib")
 
 // TODO: Move normalize velocity to ball class

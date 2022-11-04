@@ -1,4 +1,4 @@
-#include "ball.h"
+#include "ball.hh"
 #include <math.h>
 #include <windows.h>
 
