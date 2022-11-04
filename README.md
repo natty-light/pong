@@ -9,7 +9,7 @@ g++ Pong.cpp ball.cpp racket.cpp -lfreeglut -lopengl32 -lwinmm -o Pong
 ```
 make
 ```
-## Cleanup
+## Cleanup (windows only)
 ```
 make clean
 ```
