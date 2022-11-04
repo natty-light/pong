@@ -1,0 +1,6 @@
+#include "racket.h"
+
+racket::racket(float x, float y) { // Constructor Definition
+	xPos = x;
+	yPos = y;
+}
