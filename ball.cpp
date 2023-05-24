@@ -1,6 +1,5 @@
 #include "ball.hh"
 #include <math.h>
-#include <windows.h>
 
 ball::ball(float x, float y, float vx, float vy) {
 	xDir = vx;
@@ -16,9 +15,7 @@ ball::ball(float x, float y, float vx, float vy, float vScalar) {
 	yPos = y;
 }
 
-void ball::soundOnHit() {
-	PlaySound(TEXT("pongSound.wav"), NULL, SND_ASYNC | SND_FILENAME);
-}
+void ball::soundOnHit() {}
 
 void ball::checkRacketCollision(int gameWidth, int racketWidth, int racketHeight, int X, int Y) {
 	float xVelMultiplier = 1.;

@@ -1,12 +1,9 @@
 #include <string>
-#include <windows.h>
 #include <iostream>
-#include <conio.h>
 #include <sstream>
 #include <math.h>
-#include <mmsystem.h>
-#include <gl\gl.h>
-#include <gl\glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include "GL/freeglut.h"
 #include "racket.hh"
 #include "ball.hh"
@@ -76,15 +73,16 @@ float predictX(float x, float y, float vx, float vy, float X, float Y) {
     return ballPosAtX;
 }
 
-void keyboard() {
-    // left racket
-    if (GetAsyncKeyState(VK_W)) if (leftRacket.getYPos() < height - racketHeight - offset) leftRacket.setYPos(leftRacket.getYPos() + racketSpeed);
-    if (GetAsyncKeyState(VK_S)) if (leftRacket.getYPos() > 0) leftRacket.setYPos(leftRacket.getYPos() - racketSpeed);
+// TODO: find a way to handle keyboard input thats not dependent on GetAsyncKeyState (windows-only API)
+// void keyboard() {
+//     // left racket
+//     if (GetAsyncKeyState(VK_W)) if (leftRacket.getYPos() < height - racketHeight - offset) leftRacket.setYPos(leftRacket.getYPos() + racketSpeed);
+//     if (GetAsyncKeyState(VK_S)) if (leftRacket.getYPos() > 0) leftRacket.setYPos(leftRacket.getYPos() - racketSpeed);
 
-    // right racket
-    if (GetAsyncKeyState(VK_UP)) if (rightRacket.getYPos() < height - racketHeight- offset) rightRacket.setYPos(rightRacket.getYPos() + racketSpeed);
-    if (GetAsyncKeyState(VK_DOWN)) if (rightRacket.getYPos() > 0) rightRacket.setYPos(rightRacket.getYPos() - racketSpeed);
-}
+//     // right racket
+//     if (GetAsyncKeyState(VK_UP)) if (rightRacket.getYPos() < height - racketHeight- offset) rightRacket.setYPos(rightRacket.getYPos() + racketSpeed);
+//     if (GetAsyncKeyState(VK_DOWN)) if (rightRacket.getYPos() > 0) rightRacket.setYPos(rightRacket.getYPos() - racketSpeed);
+// }
 
 void draw() {
     // clear (has to be done at the beginning)
@@ -207,7 +205,7 @@ void controlPaddle(char Racket) {
 
 void update(int value) {
     // input handling
-    keyboard();
+    // keyboard();
 
     // update ball
     updateBall();

@@ -15,6 +15,6 @@ add_executable(pong
 )
 
 target_link_libraries(pong
-    ${OPENGL_LIBRARY}
-    GLUT
+    ${OPENGL_LIBRARIES}
+    glut
 )
