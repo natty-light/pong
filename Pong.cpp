@@ -2,9 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include "GL/freeglut.h"
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include "lib/freeglut/include/GL/freeglut.h"
 #include "racket.hh"
 #include "ball.hh"
 #pragma comment(lib, "OpenGL32.lib")
@@ -16,6 +16,9 @@
 #define VK_S 0x53
 #define VK_UP 0x26
 #define VK_DOWN 0x28
+
+#define UP_W 0x77
+#define DOWN_S 0x73
 
 int width = 500;
 int height = 500;
@@ -83,6 +86,28 @@ float predictX(float x, float y, float vx, float vy, float X, float Y) {
 //     if (GetAsyncKeyState(VK_UP)) if (rightRacket.getYPos() < height - racketHeight- offset) rightRacket.setYPos(rightRacket.getYPos() + racketSpeed);
 //     if (GetAsyncKeyState(VK_DOWN)) if (rightRacket.getYPos() > 0) rightRacket.setYPos(rightRacket.getYPos() - racketSpeed);
 // }
+
+void handleInput(unsigned char key, int x, int y) {
+    switch (key) {
+        case UP_W:
+            if (leftRacket.getYPos() < height - racketHeight - offset) leftRacket.setYPos(leftRacket.getYPos() + racketSpeed);
+            break;
+        case DOWN_S:
+            if (leftRacket.getYPos() > 0) leftRacket.setYPos(leftRacket.getYPos() - racketSpeed);
+            break;
+    }
+}
+
+void handleInput(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_UP:
+            if (rightRacket.getYPos() < height - racketHeight- offset) rightRacket.setYPos(rightRacket.getYPos() + racketSpeed);
+            break;
+        case GLUT_KEY_DOWN:
+            if (rightRacket.getYPos() > 0) rightRacket.setYPos(rightRacket.getYPos() - racketSpeed);
+            break;
+    }
+}
 
 void draw() {
     // clear (has to be done at the beginning)
@@ -204,9 +229,6 @@ void controlPaddle(char Racket) {
 }
 
 void update(int value) {
-    // input handling
-    // keyboard();
-
     // update ball
     updateBall();
 
@@ -231,6 +253,8 @@ int main(int argc, char** argv) {
     // Register callback functions  
     glutDisplayFunc(draw);
     glutTimerFunc(interval, update, 0);
+    glutKeyboardFunc(handleInput);
+    glutSpecialFunc(handleInput);
 
     // setup scene to 2d mode and set draw color to white
     enable2D(width, height);
@@ -241,4 +265,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-
