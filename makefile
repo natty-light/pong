@@ -1,6 +1,6 @@
 CC = g++
 CCFLAGS = -Wall
-LDFLAGS = -lfreeglut -lopengl32 -lwinmm -L"C:\Program Files\Common Files\freeglut\lib\x64"
+LDFLAGS = -lfreeglut -lopengl32 -L"C:\Program Files\Common Files\freeglut\lib\x64"
 IFLAGS = -I"C:\Program Files\Common Files\MinGW\freeglut\include"
 TARGET = Pong.exe
 OBJFILES = Pong.o ball.o racket.o
