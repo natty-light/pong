@@ -4,7 +4,7 @@
 #include <math.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
-#include "lib/freeglut/include/GL/freeglut.h"
+#include <GLFW/glfw3.h>
 #include "racket.hh"
 #include "ball.hh"
 #pragma comment(lib, "OpenGL32.lib")
@@ -19,6 +19,8 @@
 
 #define UP_W 0x77
 #define DOWN_S 0x73
+
+#define GL_SILENCE_DEPRECATION 1
 
 int width = 500;
 int height = 500;
@@ -44,10 +46,10 @@ void enable2D(int width, int height) {
     glLoadIdentity();
 }
 
-void drawText(float x, float y, std::string text) {
-    glRasterPos2f(x, y);
-    glutBitmapString(GLUT_BITMAP_8_BY_13, (const unsigned char*)text.c_str());
-}
+// void drawText(float x, float y, std::string text) {
+//     glRasterPos2f(x, y);
+//     glutBitmapString(GLUT_BITMAP_8_BY_13, (const unsigned char*)text.c_str());
+// }
 
 void drawRect(float x, float y, float width, float height) {
     glBegin(GL_QUADS);
@@ -76,37 +78,25 @@ float predictX(float x, float y, float vx, float vy, float X, float Y) {
     return ballPosAtX;
 }
 
-// TODO: find a way to handle keyboard input thats not dependent on GetAsyncKeyState (windows-only API)
-// void keyboard() {
-//     // left racket
-//     if (GetAsyncKeyState(VK_W)) if (leftRacket.getYPos() < height - racketHeight - offset) leftRacket.setYPos(leftRacket.getYPos() + racketSpeed);
-//     if (GetAsyncKeyState(VK_S)) if (leftRacket.getYPos() > 0) leftRacket.setYPos(leftRacket.getYPos() - racketSpeed);
-
-//     // right racket
-//     if (GetAsyncKeyState(VK_UP)) if (rightRacket.getYPos() < height - racketHeight- offset) rightRacket.setYPos(rightRacket.getYPos() + racketSpeed);
-//     if (GetAsyncKeyState(VK_DOWN)) if (rightRacket.getYPos() > 0) rightRacket.setYPos(rightRacket.getYPos() - racketSpeed);
-// }
-
-void handleInput(unsigned char key, int x, int y) {
+static void handleInput(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action != GLFW_PRESS) {
+        return;
+    }
     switch (key) {
-        case UP_W:
+        case GLFW_KEY_W:
             if (leftRacket.getYPos() < height - racketHeight - offset) leftRacket.setYPos(leftRacket.getYPos() + racketSpeed);
             break;
-        case DOWN_S:
+        case GLFW_KEY_S:
             if (leftRacket.getYPos() > 0) leftRacket.setYPos(leftRacket.getYPos() - racketSpeed);
             break;
-    }
-}
-
-void handleInput(int key, int x, int y) {
-    switch (key) {
-        case GLUT_KEY_UP:
+        case GLFW_KEY_UP:
             if (rightRacket.getYPos() < height - racketHeight- offset) rightRacket.setYPos(rightRacket.getYPos() + racketSpeed);
             break;
-        case GLUT_KEY_DOWN:
+        case GLFW_KEY_DOWN:
             if (rightRacket.getYPos() > 0) rightRacket.setYPos(rightRacket.getYPos() - racketSpeed);
             break;
     }
+    return;
 }
 
 void draw() {
@@ -115,19 +105,14 @@ void draw() {
     glLoadIdentity();
 
     // ToDo: draw our scene
-    drawText(width / 4 - 10, height - 30, std::to_string(lScore));
-    drawText(3 * width / 4 + 10, height - 30, std::to_string(rScore));
+    // drawText(width / 4 - 10, height - 30, std::to_string(lScore));
+    // drawText(3 * width / 4 + 10, height - 30, std::to_string(rScore));
 
     // draw rackets and ball
     drawRect(leftRacket.getXPos(), leftRacket.getYPos(), racketWidth, racketHeight);
     drawRect(rightRacket.getXPos(), rightRacket.getYPos(), racketWidth, racketHeight);
     drawRect(gameBall.getXPos() - ballLength / 2, gameBall.getYPos() - ballLength / 2, ballLength, ballLength);
-
-
     //drawRect(leftRacket.getXPos(), predictX(gameBall.getXPos(), gameBall.getYPos(), gameBall.getXDir(), gameBall.getYDir(), leftRacket.getXPos(), leftRacket.getYPos()), ballLength, ballLength);
-
-    // swap buffers (has to be done at the end)
-    glutSwapBuffers();
 }
 
 void reset(float vx, float mult) {
@@ -228,40 +213,32 @@ void controlPaddle(char Racket) {
     
 }
 
-void update(int value) {
-    // update ball
-    updateBall();
-
-    // Comment out for multiplayer
-    controlPaddle('l');
-    // controlPaddle('r'); TODO make general
-
-    // Call update() again in 'interval' milliseconds
-    glutTimerFunc(interval, update, 0);
-
-    // Redisplay frame
-    glutPostRedisplay();
-}
-
 int main(int argc, char** argv) {
     // Init glut and set window params
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(width, height);
-    glutCreateWindow("Pong by Nat :) ");
-
-    // Register callback functions  
-    glutDisplayFunc(draw);
-    glutTimerFunc(interval, update, 0);
-    glutKeyboardFunc(handleInput);
-    glutSpecialFunc(handleInput);
-
-    // setup scene to 2d mode and set draw color to white
+    if (!glfwInit()) {
+        return 0;
+    }
+    GLFWwindow* window = glfwCreateWindow(width, height, "Pong by Nat :) ", NULL, NULL);
+    if (!window) {
+        return 0;
+    }
+    glfwMakeContextCurrent(window);
     enable2D(width, height);
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glfwSwapInterval(1);
+    
+    // Register callback functions  
+    glfwSetKeyCallback(window, handleInput);
 
-    // Manages window
-    glutMainLoop();
+    glColor3f(1.0f, 1.0f, 1.0f);
+    while (!glfwWindowShouldClose(window)) {
+        // update ball
+        updateBall();
+        controlPaddle('l');
+        // controlPaddle('r');
+        draw();
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
 
     return 0;
 }

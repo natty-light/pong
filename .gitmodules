@@ -1,3 +1,0 @@
-[submodule "lib/freeglut"]
-	path = lib/freeglut
-	url = https://github.com/FreeGLUTProject/freeglut
