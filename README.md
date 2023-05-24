@@ -1,15 +1,8 @@
-# To Compile
-run the following command:
+# Build from source (Cmake)
 ```
-g++ Pong.cpp ball.cpp racket.cpp -lfreeglut -lopengl32 -lwinmm -o Pong
-```
-
-# If you have make
-## Compile
-```
+sudo apt-get install libfreeglut-dev
+mkdir build
+cd build
+cmake ..
 make
-```
-## Cleanup (windows only)
-```
-make clean
 ```
