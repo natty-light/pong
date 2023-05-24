@@ -20,8 +20,6 @@
 #define UP_W 0x77
 #define DOWN_S 0x73
 
-#define GL_SILENCE_DEPRECATION 1
-
 int width = 500;
 int height = 500;
 int interval = 1000 / 60;
@@ -79,9 +77,6 @@ float predictX(float x, float y, float vx, float vy, float X, float Y) {
 }
 
 static void handleInput(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (action != GLFW_PRESS) {
-        return;
-    }
     switch (key) {
         case GLFW_KEY_W:
             if (leftRacket.getYPos() < height - racketHeight - offset) leftRacket.setYPos(leftRacket.getYPos() + racketSpeed);
@@ -95,6 +90,8 @@ static void handleInput(GLFWwindow* window, int key, int scancode, int action, i
         case GLFW_KEY_DOWN:
             if (rightRacket.getYPos() > 0) rightRacket.setYPos(rightRacket.getYPos() - racketSpeed);
             break;
+        case GLFW_KEY_ESCAPE:
+            glfwSetWindowShouldClose(window, 1);
     }
     return;
 }
