@@ -7,7 +7,7 @@
 #include <mmsystem.h>
 #include <gl\gl.h>
 #include <gl\glu.h>
-#include "GL\freeglut.h"
+#include "GL/freeglut.h"
 #include "racket.hh"
 #include "ball.hh"
 #pragma comment(lib, "OpenGL32.lib")
